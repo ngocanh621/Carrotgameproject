@@ -1,0 +1,14 @@
+#ifndef _DEF__H
+#define _DEF__H
+
+const int WINDOW_WIDTH = 768;
+const int WINDOW_HEIGHT = 510;
+const char* WINDOW_TITLE = "Carrot";
+
+enum KeyPressSurfaces{
+     UP,
+     DOWN,
+     LEFT,
+     RIGHT
+};
+#endif
