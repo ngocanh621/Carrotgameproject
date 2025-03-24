@@ -3,7 +3,7 @@
 
 const int WINDOW_WIDTH = 768;
 const int WINDOW_HEIGHT = 510;
-const char* WINDOW_TITLE = "Carrot";
+const char* WINDOW_TITLE = "MEO";
 
 enum KeyPressSurfaces{
      UP,
