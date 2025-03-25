@@ -32,7 +32,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="carrot.cpp" />
+		<Unit filename="carrot.h" />
 		<Unit filename="def.h" />
+		<Unit filename="enemy.h" />
 		<Unit filename="graphic.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="mouse.h" />

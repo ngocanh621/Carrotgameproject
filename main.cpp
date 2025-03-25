@@ -4,6 +4,7 @@
 #include "def.h"
 #include "graphic.h"
 #include "Carrot.h"
+#include "Enemy.h"
 
 void waitUntilClicktoClose(){
     bool quit = false;
@@ -49,36 +50,50 @@ int main(int argc, char *argv[]) {
     graphics.prepareScene(background[0]);
     graphics.presentScene();
 
-    graphics.renderTexture(background[1], 290, 330, 150, 150, graphics.renderer);
+    graphics.renderTexture(background[1], 290, 300, 150, 150, graphics.renderer);
     graphics.presentScene();
 
     waitUntilClicktoClose();
 
-    SDL_Rect buttonRect = {290, 330, 150, 150};
+    SDL_Rect buttonRect = {290, 300, 150, 150};
     waitUntilClickToSwitch(buttonRect);
 
 
-    graphics.renderTexture(background[2], 0, 0, 768, 510, graphics.renderer);
+    graphics.renderTexture(background[2], 0, 0, 768, 450, graphics.renderer);
     graphics.presentScene();
 
     Carrot carrot(290, 300);
     carrot.texture = graphics.loadTexture("carrot.png");
 
+    Enemy enemy1(100, 0, 2);
+    enemy1.texture = graphics.loadTexture("enemy.png");
+
+    Enemy enemy2(200, 0, 2);
+    enemy2.texture = graphics.loadTexture("enemy.png");
+
     bool quit = false;
     SDL_Event event;
 
-    while (!quit) {
+     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
         }
-
+        enemy1.move();
+        enemy2.move();
 
         graphics.prepareScene(background[2]);
+
         carrot.render(graphics.renderer);
+
+        enemy1.render(graphics.renderer);
+        enemy2.render(graphics.renderer);
+
         graphics.presentScene();
     }
+
+
 
     graphics.quitSDL();
     SDL_Quit();
