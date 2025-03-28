@@ -3,29 +3,32 @@
 
 #include <SDL.h>
 #include <vector>
+#include "Enemy.h"
 
 struct Path {
     std::vector<SDL_Point> points;
-    int currentPoint = 0;
+
+    void move(Enemy& enemy) {
+        if (!points.empty()) {
+            SDL_Point target = points[0];
+
+            if (enemy.pos.x < target.x) {
+                enemy.pos.x += enemy.speed;
+            } else if (enemy.pos.x > target.x) {
+                enemy.pos.x -= enemy.speed;
+            }
+
+            if (enemy.pos.y < target.y) {
+                enemy.pos.y += enemy.speed;
+            } else if (enemy.pos.y > target.y) {
+                enemy.pos.y -= enemy.speed;
+            }
+        }
+    }
 
     void addPoint(int x, int y) {
         points.push_back({x, y});
     }
-
-    void move(SDL_Rect& pos) {
-        if (currentPoint < points.size()) {
-            SDL_Point target = points[currentPoint];
-            int dx = target.x - pos.x;
-            int dy = target.y - pos.y;
-            if (abs(dx) > 1 || abs(dy) > 1) {
-                pos.x += dx / 10;
-                pos.y += dy / 10;
-            } else {
-                currentPoint++;
-            }
-        }
-    }
 };
 
 #endif
-

@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     background[0] = graphics.loadTexture("background carrot.png");
     background[1] = graphics.loadTexture("startbutton.png");
     background[2] = graphics.loadTexture("screen.jpg");
-    background[3] = graphics.loadTexture("level1.jpg");
+    background[3] = graphics.loadTexture("path.jpg");
 
 
     graphics.prepareScene(background[0]);
@@ -92,9 +92,9 @@ int main(int argc, char *argv[]) {
                 quit = true;
             }
         }
-        path.move(enemy1.pos);  // Di chuyển kẻ thù 1
-        path.move(enemy2.pos);  // Di chuyển kẻ thù 2
-        path.move(enemy3.pos);  // Di chuyển kẻ thù 3
+        path.move(enemy1.pos);
+        path.move(enemy2.pos);
+        path.move(enemy3.pos);
 
 
         graphics.prepareScene(background[2]);
