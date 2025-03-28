@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1742927702 source:f:\demosdl3\main.cpp
+1743123849 source:f:\demosdl3\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -7,7 +7,7 @@
 	"graphic.h"
 	"Carrot.h"
 	"Enemy.h"
-	"Level.h"
+	"Path.h"
 
 1742920827 f:\demosdl3\def.h
 
@@ -23,10 +23,12 @@
 
 1742911565 source:f:\demosdl3\enemy.cpp
 
-1742927875 f:\demosdl3\enemy.h
+1743122645 f:\demosdl3\enemy.h
 	<SDL.h>
 
-1742928185 f:\demosdl3\level.h
-	"Enemy.h"
+1743122674 f:\demosdl3\level.h
+
+1743009564 f:\demosdl3\path.h
+	<SDL.h>
 	<vector>
 

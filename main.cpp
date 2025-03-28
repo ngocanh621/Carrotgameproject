@@ -5,8 +5,7 @@
 #include "graphic.h"
 #include "Carrot.h"
 #include "Enemy.h"
-#include "Level.h"  // Bao gồm Level.h để quản lý các cấp độ
-
+#include "Path.h"
 void waitUntilClicktoClose(){
     bool quit = false;
     SDL_Event e;
@@ -43,11 +42,12 @@ int main(int argc, char *argv[]) {
     Graphics graphics;
     graphics.init();
 
-    // Tải các hình nền
-    SDL_Texture* background[3];
+    SDL_Texture* background[4];
     background[0] = graphics.loadTexture("background carrot.png");
     background[1] = graphics.loadTexture("startbutton.png");
     background[2] = graphics.loadTexture("screen.jpg");
+    background[3] = graphics.loadTexture("level1.jpg");
+
 
     graphics.prepareScene(background[0]);
     graphics.presentScene();
@@ -60,14 +60,27 @@ int main(int argc, char *argv[]) {
     SDL_Rect buttonRect = {290, 300, 150, 150};
     waitUntilClickToSwitch(buttonRect);
 
-    Level level1("level1.jpg", graphics.renderer);
-    level1.generateEnemies();  // Tạo các kẻ thù cho cấp độ 1
-
     graphics.renderTexture(background[2], 0, 0, 768, 450, graphics.renderer);
     graphics.presentScene();
 
     Carrot carrot(290, 300);
     carrot.texture = graphics.loadTexture("carrot.png");
+
+    Enemy enemy1(100, 0, TYPE1);
+    enemy1.texture = graphics.loadTexture("enemy.png");
+
+    Enemy enemy2(200, 0, TYPE2);
+    enemy2.texture = graphics.loadTexture("enemy.png");
+
+    Enemy enemy3(300, 0, TYPE3);
+    enemy3.texture = graphics.loadTexture("enemy.png");
+
+    Path path;
+    path.addPoint(100, 300);
+    path.addPoint(200, 250);
+    path.addPoint(300, 200);
+    path.addPoint(400, 150);
+    path.addPoint(500, 100);
 
 
     bool quit = false;
@@ -79,13 +92,15 @@ int main(int argc, char *argv[]) {
                 quit = true;
             }
         }
+        path.move(enemy1.pos);  // Di chuyển kẻ thù 1
+        path.move(enemy2.pos);  // Di chuyển kẻ thù 2
+        path.move(enemy3.pos);  // Di chuyển kẻ thù 3
 
-        level1.moveEnemies();
 
         graphics.prepareScene(background[2]);
-        level1.renderEnemies(graphics.renderer);
-        graphics.renderTexture(level1.backgroundTexture, 96, 56, 576, 338 , graphics.renderer);
-            carrot.render(graphics.renderer);
+        graphics.renderTexture(background[3], 96, 56, 576, 338 , graphics.renderer);
+        carrot.render(graphics.renderer);
+        enemy1.render(graphics.renderer);
 
 
         graphics.presentScene();
@@ -95,4 +110,3 @@ int main(int argc, char *argv[]) {
     SDL_Quit();
     return 0;
 }
-
