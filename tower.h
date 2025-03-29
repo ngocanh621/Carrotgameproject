@@ -13,6 +13,18 @@ struct Tower {
     int attackSpeed;
     Uint32 lastAttackTime;
 
+    Tower() {
+        pos.x = 0;
+        pos.y = 0;
+        pos.w = 64;
+        pos.h = 64;
+        attackRange = 150;
+        attackDamage = 10;
+        attackSpeed = 1000;
+        lastAttackTime = 0;
+        texture = nullptr;
+    }
+
     Tower(int x, int y) {
         pos.x = x;
         pos.y = y;
@@ -22,6 +34,7 @@ struct Tower {
         attackDamage = 10;
         attackSpeed = 1000;
         lastAttackTime = 0;
+        texture = nullptr;
     }
 
     void render(SDL_Renderer* renderer) {

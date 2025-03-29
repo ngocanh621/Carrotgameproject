@@ -1,11 +1,11 @@
-#ifndef PATH_H
-#define PATH_H
+#ifndef ROAD_H
+#define ROAD_H
 
 #include <SDL.h>
 #include <vector>
 #include "Enemy.h"
 
-struct Path {
+struct Road {
     std::vector<SDL_Point> points;
 
     void move(Enemy& enemy) {

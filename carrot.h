@@ -2,16 +2,15 @@
 #define CARROT_H
 
 #include <SDL.h>
-
 struct Carrot {
-    SDL_Texture* texture;
     SDL_Rect pos;
+    SDL_Texture* texture;
 
     Carrot(int x, int y) {
         pos.x = x;
         pos.y = y;
-        pos.w = 106;
-        pos.h = 80;
+        pos.w = 80;
+        pos.h = 60;
         texture = nullptr;
     }
 
@@ -19,10 +18,6 @@ struct Carrot {
         if (texture != nullptr) {
             SDL_RenderCopy(renderer, texture, NULL, &pos);
         }
-    }
-
-    SDL_Rect getCollider() {
-        return pos;
     }
 };
 
