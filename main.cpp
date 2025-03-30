@@ -45,6 +45,17 @@ const SDL_Rect* getValidPosition(int x, int y, const std::vector<SDL_Rect>& vali
     }
     return nullptr;
 }
+
+void setupEnemyPath(Enemy& enemy) {
+    enemy.path.setNext("right", 77);
+    enemy.path.setNext("up", 65);
+    enemy.path.setNext("right", 200);
+    enemy.path.setNext("down", 220);
+    enemy.path.setNext("right", 360);
+    enemy.path.setNext("up", 150);
+    enemy.path.setNext("right", WINDOW_WIDTH);
+}
+
 int main(int argc, char *argv[]) {
     Graphics graphics;
     graphics.init();
@@ -52,10 +63,9 @@ int main(int argc, char *argv[]) {
     SDL_Texture* background[4];
     background[0] = graphics.loadTexture("background carrot cute.png");
     background[1] = graphics.loadTexture("startbutton.png");
-    //background[2] = graphics.loadTexture("screen.jpg");
     background[3] = graphics.loadTexture("Pathback.jpg");
 
-    if (!background[0] || !background[1] || !background[2] || !background[3]) {
+    if (!background[0] || !background[1] || !background[3]) {
         std::cerr << "Failed to load background textures!" << std::endl;
         graphics.quitSDL();
         return -1;
@@ -68,20 +78,33 @@ int main(int argc, char *argv[]) {
     SDL_Rect buttonRect = {210, 240, 150, 150};
     waitUntilClickToSwitch(buttonRect);
 
-    Carrot carrot(526, 145);
+    Carrot carrot(535, 125);
     carrot.texture = graphics.loadTexture("carrot.png");
 
-    // Tải texture cho từng loại kẻ thù
-    SDL_Texture* enemyType1Texture = graphics.loadTexture("baby.png");
-    SDL_Texture* enemyType2Texture = graphics.loadTexture("baby4.png");
-    SDL_Texture* enemyType3Texture = graphics.loadTexture("baby5.png");
+    SDL_Texture* enemyType1Texture = graphics.loadTexture("baby snail.png");
+    SDL_Texture* enemyType2Texture = graphics.loadTexture("baby chicken.png");
+    SDL_Texture* enemyType3Texture = graphics.loadTexture("baby rabbit.png");
 
     std::vector<Enemy> enemies;
-    enemies.push_back(Enemy(12, 190, TYPE1, 0));
-    enemies.push_back(Enemy(12, 190, TYPE2, 2000));
-    enemies.push_back(Enemy(12, 190, TYPE3, 4000));
 
-    // Gán texture cho từng kẻ thù
+    std::cout << "Wave 1 incoming!" << std::endl;
+    enemies.push_back(Enemy(12, 190, TYPE1, 0));
+    enemies.push_back(Enemy(12, 190, TYPE2, 4000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 8000));
+
+    std::cout << "Wave 2 will arrive in 10 seconds!" << std::endl;
+    enemies.push_back(Enemy(12, 190, TYPE1, 10000));
+    enemies.push_back(Enemy(12, 190, TYPE2, 12000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 14000));
+    enemies.push_back(Enemy(12, 190, TYPE1, 16000));
+
+    std::cout << "Wave 3 will arrive in 20 seconds!" << std::endl;
+    enemies.push_back(Enemy(12, 190, TYPE2, 20000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 22000));
+    enemies.push_back(Enemy(12, 190, TYPE1, 24000));
+    enemies.push_back(Enemy(12, 190, TYPE2, 26000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 28000));
+
     for (auto& enemy : enemies) {
         switch (enemy.type) {
             case TYPE1:
@@ -94,13 +117,7 @@ int main(int argc, char *argv[]) {
                 enemy.texture = enemyType3Texture;
                 break;
         }
-        enemy.path.setNext("right", 77);
-        enemy.path.setNext("up", 65);
-        enemy.path.setNext("right", 200);
-        enemy.path.setNext("down", 220);
-        enemy.path.setNext("right", 360);
-        enemy.path.setNext("up", 150);
-        enemy.path.setNext("right", WINDOW_WIDTH);
+        setupEnemyPath(enemy);
     }
 
     if (!carrot.texture || !enemyType1Texture || !enemyType2Texture || !enemyType3Texture) {
@@ -110,12 +127,13 @@ int main(int argc, char *argv[]) {
     }
 
     std::vector<SDL_Rect> validTowerPositions = {
-        {130, 200, 50, 50},
-        {40, 150, 50, 50},
+        {120, 180, 50, 50},
+        {30, 150, 50, 50},
         {245, 100, 50, 50},
-        {450, 125, 50, 50},
+        {450, 100, 50, 50},
         {410, 205, 50, 50},
-        {280, 205, 50, 50}
+        {280, 180, 50, 50},
+        {140, 30, 50, 50}
     };
 
     std::vector<bool> positionOccupied(validTowerPositions.size(), false);
@@ -234,8 +252,7 @@ int main(int argc, char *argv[]) {
             quit = true;
         }
 
-        graphics.prepareScene(background[2]);
-        graphics.renderTexture(background[3], 0, 0, 600, 400, graphics.renderer);
+        graphics.prepareScene(background[3]); // Sử dụng Pathback.jpg làm nền chính
         carrot.render(graphics.renderer);
         for (auto& enemy : enemies) {
             if (enemy.isAlive() && currentTime >= enemy.spawnTime) {

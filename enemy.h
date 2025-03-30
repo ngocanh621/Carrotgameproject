@@ -38,7 +38,7 @@ struct Enemy {
                 health = maxHealth = 450;
                 break;
             case TYPE3:
-                speed = 2;
+                speed = 1.75;
                 health = maxHealth = 600;
                 break;
         }
