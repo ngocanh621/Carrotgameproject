@@ -1,8 +1,9 @@
 # depslib dependency file v1.0
-1743345600 source:f:\demosdl3\main.cpp
+1743348505 source:f:\demosdl3\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_mixer.h>
 	"def.h"
 	"graphic.h"
 	"Carrot.h"
@@ -12,9 +13,10 @@
 
 1743345339 f:\demosdl3\def.h
 
-1743295433 f:\demosdl3\graphic.h
+1743347266 f:\demosdl3\graphic.h
 	<SDL.h>
 	<SDL_image.h>
+	<SDL_ttf.h>
 	"def.h"
 
 1742823047 source:f:\demosdl3\carrot.cpp
@@ -24,7 +26,7 @@
 
 1743295462 source:f:\demosdl3\enemy.cpp
 
-1743345632 f:\demosdl3\enemy.h
+1743348505 f:\demosdl3\enemy.h
 	<SDL.h>
 	"map_direction.h"
 

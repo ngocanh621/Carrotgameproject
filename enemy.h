@@ -34,12 +34,12 @@ struct Enemy {
                 health = maxHealth = 300;
                 break;
             case TYPE2:
-                speed = 1.5;
-                health = maxHealth = 450;
+                speed = 1.25;
+                health = maxHealth = 400;
                 break;
             case TYPE3:
-                speed = 1.75;
-                health = maxHealth = 600;
+                speed = 1.5;
+                health = maxHealth = 500;
                 break;
         }
         texture = nullptr;

@@ -1,12 +1,17 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
 #include "def.h"
 #include "graphic.h"
 #include "Carrot.h"
 #include "Enemy.h"
 #include "Tower.h"
 #include <vector>
+
+int playerMoney = 500;
+int playerScore = 0;
+const int TOWER_COSTS[] = {50, 75, 100};
 
 void waitUntilClickToSwitch(SDL_Rect buttonRect) {
     SDL_Event e;
@@ -60,6 +65,21 @@ int main(int argc, char *argv[]) {
     Graphics graphics;
     graphics.init();
 
+    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
+        SDL_Log("SDL_mixer could not initialize! SDL_mixer Error: %s", Mix_GetError());
+        return 1;
+    }
+    Mix_Music* backgroundMusic = Mix_LoadMUS("back sound.wav");
+      if(backgroundMusic == nullptr){
+        SDL_Log("Failed to load background music! SDL_mixer Error: %s", Mix_GetError());
+        return 1;
+      }
+      Mix_VolumeMusic(64);
+      if(Mix_PlayMusic(backgroundMusic, -1)== -1){
+        SDL_Log("Failed to play background music! SDL_mixer Error: %s", Mix_GetError());
+        return 1;
+      }
+
     SDL_Texture* background[4];
     background[0] = graphics.loadTexture("background carrot cute.png");
     background[1] = graphics.loadTexture("startbutton.png");
@@ -78,7 +98,7 @@ int main(int argc, char *argv[]) {
     SDL_Rect buttonRect = {210, 240, 150, 150};
     waitUntilClickToSwitch(buttonRect);
 
-    Carrot carrot(535, 125);
+    Carrot carrot(526, 145);
     carrot.texture = graphics.loadTexture("carrot.png");
 
     SDL_Texture* enemyType1Texture = graphics.loadTexture("baby snail.png");
@@ -86,36 +106,27 @@ int main(int argc, char *argv[]) {
     SDL_Texture* enemyType3Texture = graphics.loadTexture("baby rabbit.png");
 
     std::vector<Enemy> enemies;
-
     std::cout << "Wave 1 incoming!" << std::endl;
     enemies.push_back(Enemy(12, 190, TYPE1, 0));
     enemies.push_back(Enemy(12, 190, TYPE2, 4000));
     enemies.push_back(Enemy(12, 190, TYPE3, 8000));
-
     std::cout << "Wave 2 will arrive in 10 seconds!" << std::endl;
-    enemies.push_back(Enemy(12, 190, TYPE1, 10000));
-    enemies.push_back(Enemy(12, 190, TYPE2, 12000));
-    enemies.push_back(Enemy(12, 190, TYPE3, 14000));
-    enemies.push_back(Enemy(12, 190, TYPE1, 16000));
-
+    enemies.push_back(Enemy(12, 190, TYPE1, 12000));
+    enemies.push_back(Enemy(12, 190, TYPE2, 14000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 16000));
+    enemies.push_back(Enemy(12, 190, TYPE1, 18000));
     std::cout << "Wave 3 will arrive in 20 seconds!" << std::endl;
-    enemies.push_back(Enemy(12, 190, TYPE2, 20000));
-    enemies.push_back(Enemy(12, 190, TYPE3, 22000));
-    enemies.push_back(Enemy(12, 190, TYPE1, 24000));
-    enemies.push_back(Enemy(12, 190, TYPE2, 26000));
-    enemies.push_back(Enemy(12, 190, TYPE3, 28000));
+    enemies.push_back(Enemy(12, 190, TYPE2, 22000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 24000));
+    enemies.push_back(Enemy(12, 190, TYPE1, 26000));
+    enemies.push_back(Enemy(12, 190, TYPE2, 28000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 30000));
 
     for (auto& enemy : enemies) {
         switch (enemy.type) {
-            case TYPE1:
-                enemy.texture = enemyType1Texture;
-                break;
-            case TYPE2:
-                enemy.texture = enemyType2Texture;
-                break;
-            case TYPE3:
-                enemy.texture = enemyType3Texture;
-                break;
+            case TYPE1: enemy.texture = enemyType1Texture; break;
+            case TYPE2: enemy.texture = enemyType2Texture; break;
+            case TYPE3: enemy.texture = enemyType3Texture; break;
         }
         setupEnemyPath(enemy);
     }
@@ -147,50 +158,47 @@ int main(int argc, char *argv[]) {
     SDL_Texture* strongTowerTexture = graphics.loadTexture("mushroom2.png");
 
     auto placeTower = [&](int x, int y, size_t index) {
-        std::cout << "Choose tower type: 1 for Basic, 2 for Fast, 3 for Strong" << std::endl;
+        std::cout << "Money: " << playerMoney << " - 1:Basic(50), 2:Fast(75), 3:Strong(100)\n";
         bool typeSelected = false;
         TowerType selectedType;
 
         while (!typeSelected && !quit) {
             while (SDL_PollEvent(&event)) {
-                if (event.type == SDL_QUIT) {
-                    quit = true;
-                    return;
-                }
+                if (event.type == SDL_QUIT) { quit = true; return; }
                 if (event.type == SDL_KEYDOWN) {
                     switch (event.key.keysym.sym) {
                         case SDLK_1:
-                            selectedType = BASIC;
-                            typeSelected = true;
-                            std::cout << "Basic Mushroom selected" << std::endl;
+                            if (playerMoney >= TOWER_COSTS[BASIC]) {
+                                selectedType = BASIC;
+                                typeSelected = true;
+                                playerMoney -= TOWER_COSTS[BASIC];
+                            }
                             break;
                         case SDLK_2:
-                            selectedType = FAST;
-                            typeSelected = true;
-                            std::cout << "Fast Mushroom selected" << std::endl;
+                            if (playerMoney >= TOWER_COSTS[FAST]) {
+                                selectedType = FAST;
+                                typeSelected = true;
+                                playerMoney -= TOWER_COSTS[FAST];
+                            }
                             break;
                         case SDLK_3:
-                            selectedType = STRONG;
-                            typeSelected = true;
-                            std::cout << "Strong Mushroom selected" << std::endl;
+                            if (playerMoney >= TOWER_COSTS[STRONG]) {
+                                selectedType = STRONG;
+                                typeSelected = true;
+                                playerMoney -= TOWER_COSTS[STRONG];
+                            }
                             break;
                     }
                 }
             }
         }
 
-        if (!quit) {
+        if (!quit && typeSelected) {
             Tower newTower(x, y, selectedType);
             switch (selectedType) {
-                case BASIC:
-                    newTower.texture = basicTowerTexture;
-                    break;
-                case FAST:
-                    newTower.texture = fastTowerTexture;
-                    break;
-                case STRONG:
-                    newTower.texture = strongTowerTexture;
-                    break;
+                case BASIC: newTower.texture = basicTowerTexture; break;
+                case FAST: newTower.texture = fastTowerTexture; break;
+                case STRONG: newTower.texture = strongTowerTexture; break;
             }
             towers.push_back(newTower);
             positionOccupied[index] = true;
@@ -236,6 +244,14 @@ int main(int argc, char *argv[]) {
             for (auto& enemy : enemies) {
                 if (enemy.isAlive() && currentTime >= enemy.spawnTime) {
                     tower.attack(graphics.renderer, enemy, currentTime);
+                    if (!enemy.isAlive() && enemy.health == 0) {
+                        switch (enemy.type) {
+                            case TYPE1: playerScore += 10; playerMoney += 5; break;
+                            case TYPE2: playerScore += 15; playerMoney += 8; break;
+                            case TYPE3: playerScore += 20; playerMoney += 10; break;
+                        }
+                        enemy.health = -1;
+                    }
                 }
             }
         }
@@ -252,7 +268,7 @@ int main(int argc, char *argv[]) {
             quit = true;
         }
 
-        graphics.prepareScene(background[3]); // Sử dụng Pathback.jpg làm nền chính
+        graphics.prepareScene(background[3]);
         carrot.render(graphics.renderer);
         for (auto& enemy : enemies) {
             if (enemy.isAlive() && currentTime >= enemy.spawnTime) {
@@ -267,6 +283,11 @@ int main(int argc, char *argv[]) {
         for (auto& tower : towers) {
             tower.render(graphics.renderer);
         }
+
+
+        char scoreText[50];
+        sprintf(scoreText, "Score: %d Money: %d", playerScore, playerMoney);
+        graphics.renderText(scoreText, 10, 350);
         graphics.presentScene();
     }
 
