@@ -79,6 +79,12 @@ int main(int argc, char *argv[]) {
         SDL_Log("Failed to play background music! SDL_mixer Error: %s", Mix_GetError());
         return 1;
       }
+    Mix_Chunk* enemyDeathSound = Mix_LoadWAV("bye sound.wav"); // Đường dẫn tới file âm thanh
+    if (enemyDeathSound == nullptr) {
+        SDL_Log("Failed to load enemy death sound! SDL_mixer Error: %s", Mix_GetError());
+        return 1;
+    }
+    Mix_VolumeChunk(enemyDeathSound, 64);
 
     SDL_Texture* background[4];
     background[0] = graphics.loadTexture("background carrot cute.png");
@@ -98,7 +104,7 @@ int main(int argc, char *argv[]) {
     SDL_Rect buttonRect = {210, 240, 150, 150};
     waitUntilClickToSwitch(buttonRect);
 
-    Carrot carrot(526, 145);
+    Carrot carrot(530, 130);
     carrot.texture = graphics.loadTexture("carrot.png");
 
     SDL_Texture* enemyType1Texture = graphics.loadTexture("baby snail.png");
@@ -109,19 +115,15 @@ int main(int argc, char *argv[]) {
     std::cout << "Wave 1 incoming!" << std::endl;
     enemies.push_back(Enemy(12, 190, TYPE1, 0));
     enemies.push_back(Enemy(12, 190, TYPE2, 4000));
-    enemies.push_back(Enemy(12, 190, TYPE3, 8000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 12000));
     std::cout << "Wave 2 will arrive in 10 seconds!" << std::endl;
-    enemies.push_back(Enemy(12, 190, TYPE1, 12000));
-    enemies.push_back(Enemy(12, 190, TYPE2, 14000));
-    enemies.push_back(Enemy(12, 190, TYPE3, 16000));
-    enemies.push_back(Enemy(12, 190, TYPE1, 18000));
+    enemies.push_back(Enemy(12, 190, TYPE2, 18000));
+    enemies.push_back(Enemy(12, 190, TYPE2, 20000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 22000));
     std::cout << "Wave 3 will arrive in 20 seconds!" << std::endl;
-    enemies.push_back(Enemy(12, 190, TYPE2, 22000));
-    enemies.push_back(Enemy(12, 190, TYPE3, 24000));
-    enemies.push_back(Enemy(12, 190, TYPE1, 26000));
-    enemies.push_back(Enemy(12, 190, TYPE2, 28000));
     enemies.push_back(Enemy(12, 190, TYPE3, 30000));
-
+    enemies.push_back(Enemy(12, 190, TYPE2, 32000));
+    enemies.push_back(Enemy(12, 190, TYPE1, 34000));
     for (auto& enemy : enemies) {
         switch (enemy.type) {
             case TYPE1: enemy.texture = enemyType1Texture; break;
@@ -251,6 +253,7 @@ int main(int argc, char *argv[]) {
                             case TYPE3: playerScore += 20; playerMoney += 10; break;
                         }
                         enemy.health = -1;
+                        Mix_PlayChannel(-1, enemyDeathSound, 0);
                     }
                 }
             }
@@ -298,6 +301,9 @@ int main(int argc, char *argv[]) {
     SDL_DestroyTexture(enemyType1Texture);
     SDL_DestroyTexture(enemyType2Texture);
     SDL_DestroyTexture(enemyType3Texture);
+    Mix_FreeMusic(backgroundMusic);
+    Mix_FreeChunk(enemyDeathSound);
+    Mix_CloseAudio();
     graphics.quitSDL();
     SDL_Quit();
     return 0;
