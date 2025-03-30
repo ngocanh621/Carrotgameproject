@@ -50,10 +50,10 @@ int main(int argc, char *argv[]) {
     graphics.init();
 
     SDL_Texture* background[4];
-    background[0] = graphics.loadTexture("img/background carrot cute.png");
-    background[1] = graphics.loadTexture("img/startbutton.png");
-    background[2] = graphics.loadTexture("img/screen.jpg");
-    background[3] = graphics.loadTexture("img/Pathback.jpg");
+    background[0] = graphics.loadTexture("image ca/background carrot cute.png");
+    background[1] = graphics.loadTexture("startbutton.png");
+    background[2] = graphics.loadTexture("screen.jpg");
+    background[3] = graphics.loadTexture("Pathback.jpg");
 
     if (!background[0] || !background[1] || !background[2] || !background[3]) {
         std::cerr << "Failed to load background textures!" << std::endl;
