@@ -32,15 +32,6 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="../file/carrot.h" />
-		<Unit filename="../file/def.h" />
-		<Unit filename="../file/enemy.h" />
-		<Unit filename="../file/graphic.h" />
-		<Unit filename="../file/main.cpp" />
-		<Unit filename="../file/map_direction.h" />
-		<Unit filename="../file/mouse.h" />
-		<Unit filename="../file/road.h" />
-		<Unit filename="../file/tower.h" />
 		<Unit filename="../image ca/Pathback.jpg" />
 		<Unit filename="../image ca/baby.png" />
 		<Unit filename="../image ca/baby1.png" />
@@ -64,6 +55,15 @@
 		<Unit filename="README.md" />
 		<Unit filename="SDL2.dll" />
 		<Unit filename="SDL2_image.dll" />
+		<Unit filename="carrot.h" />
+		<Unit filename="def.h" />
+		<Unit filename="enemy.h" />
+		<Unit filename="graphic.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="map_direction.h" />
+		<Unit filename="mouse.h" />
+		<Unit filename="road.h" />
+		<Unit filename="tower.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

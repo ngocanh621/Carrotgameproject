@@ -50,9 +50,9 @@ int main(int argc, char *argv[]) {
     graphics.init();
 
     SDL_Texture* background[4];
-    background[0] = graphics.loadTexture("image ca/background carrot cute.png");
+    background[0] = graphics.loadTexture("background carrot cute.png");
     background[1] = graphics.loadTexture("startbutton.png");
-    background[2] = graphics.loadTexture("screen.jpg");
+    //background[2] = graphics.loadTexture("screen.jpg");
     background[3] = graphics.loadTexture("Pathback.jpg");
 
     if (!background[0] || !background[1] || !background[2] || !background[3]) {
@@ -69,12 +69,12 @@ int main(int argc, char *argv[]) {
     waitUntilClickToSwitch(buttonRect);
 
     Carrot carrot(526, 145);
-    carrot.texture = graphics.loadTexture("img/carrot.png");
+    carrot.texture = graphics.loadTexture("carrot.png");
 
     // Tải texture cho từng loại kẻ thù
-    SDL_Texture* enemyType1Texture = graphics.loadTexture("img/baby.png");
-    SDL_Texture* enemyType2Texture = graphics.loadTexture("img/baby4.png");
-    SDL_Texture* enemyType3Texture = graphics.loadTexture("img/baby5.png");
+    SDL_Texture* enemyType1Texture = graphics.loadTexture("baby.png");
+    SDL_Texture* enemyType2Texture = graphics.loadTexture("baby4.png");
+    SDL_Texture* enemyType3Texture = graphics.loadTexture("baby5.png");
 
     std::vector<Enemy> enemies;
     enemies.push_back(Enemy(12, 190, TYPE1, 0));
@@ -123,10 +123,10 @@ int main(int argc, char *argv[]) {
     bool quit = false;
     SDL_Event event;
 
-    SDL_Texture* towerPlaceholderTexture = graphics.loadTexture("img/plus.png");
-    SDL_Texture* basicTowerTexture = graphics.loadTexture("img/mushroom.png");
-    SDL_Texture* fastTowerTexture = graphics.loadTexture("img/mushroom1.png");
-    SDL_Texture* strongTowerTexture = graphics.loadTexture("img/mushroom2.png");
+    SDL_Texture* towerPlaceholderTexture = graphics.loadTexture("plus.png");
+    SDL_Texture* basicTowerTexture = graphics.loadTexture("mushroom.png");
+    SDL_Texture* fastTowerTexture = graphics.loadTexture("mushroom1.png");
+    SDL_Texture* strongTowerTexture = graphics.loadTexture("mushroom2.png");
 
     auto placeTower = [&](int x, int y, size_t index) {
         std::cout << "Choose tower type: 1 for Basic, 2 for Fast, 3 for Strong" << std::endl;
