@@ -9,10 +9,12 @@
 #include "Tower.h"
 #include <vector>
 
+// tien va diem
 int playerMoney = 500;
 int playerScore = 0;
 const int TOWER_COSTS[] = {50, 75, 100};
 
+//click de tiep tuc
 void waitUntilClickToSwitch(SDL_Rect buttonRect) {
     SDL_Event e;
     bool clicked = false;
@@ -29,10 +31,12 @@ void waitUntilClickToSwitch(SDL_Rect buttonRect) {
     }
 }
 
+// ktra va cham 2 hcn
 bool checkCollision(SDL_Rect a, SDL_Rect b) {
     return (a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y);
 }
 
+//check xem dat nam co o vi tri dc cho k
 bool canPlaceTower(int x, int y, const std::vector<SDL_Rect>& validPositions) {
     for (const auto& pos : validPositions) {
         if (x >= pos.x && x <= pos.x + pos.w && y >= pos.y && y <= pos.y + pos.h) {
@@ -42,6 +46,7 @@ bool canPlaceTower(int x, int y, const std::vector<SDL_Rect>& validPositions) {
     return false;
 }
 
+//tra con tro ve vi tri hop le
 const SDL_Rect* getValidPosition(int x, int y, const std::vector<SDL_Rect>& validPositions) {
     for (const auto& pos : validPositions) {
         if (x >= pos.x && x <= pos.x + pos.w && y >= pos.y && y <= pos.y + pos.h) {
@@ -51,6 +56,7 @@ const SDL_Rect* getValidPosition(int x, int y, const std::vector<SDL_Rect>& vali
     return nullptr;
 }
 
+// duong di enemy
 void setupEnemyPath(Enemy& enemy) {
     enemy.path.setNext("right", 77);
     enemy.path.setNext("up", 65);
@@ -58,27 +64,28 @@ void setupEnemyPath(Enemy& enemy) {
     enemy.path.setNext("down", 220);
     enemy.path.setNext("right", 360);
     enemy.path.setNext("up", 150);
-    enemy.path.setNext("right", WINDOW_WIDTH);
+    enemy.path.setNext("right", 530 );
 }
 
 int main(int argc, char *argv[]) {
     Graphics graphics;
     graphics.init();
 
+    //nhac
     if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
         SDL_Log("SDL_mixer could not initialize! SDL_mixer Error: %s", Mix_GetError());
         return 1;
     }
     Mix_Music* backgroundMusic = Mix_LoadMUS("back sound.wav");
-      if(backgroundMusic == nullptr){
+    if(backgroundMusic == nullptr){
         SDL_Log("Failed to load background music! SDL_mixer Error: %s", Mix_GetError());
         return 1;
-      }
-      Mix_VolumeMusic(64);
-      if(Mix_PlayMusic(backgroundMusic, -1)== -1){
+    }
+    Mix_VolumeMusic(64);
+    if(Mix_PlayMusic(backgroundMusic, -1)== -1){
         SDL_Log("Failed to play background music! SDL_mixer Error: %s", Mix_GetError());
         return 1;
-      }
+    }
     Mix_Chunk* enemyDeathSound = Mix_LoadWAV("bye sound.wav"); // Đường dẫn tới file âm thanh
     if (enemyDeathSound == nullptr) {
         SDL_Log("Failed to load enemy death sound! SDL_mixer Error: %s", Mix_GetError());
@@ -86,6 +93,7 @@ int main(int argc, char *argv[]) {
     }
     Mix_VolumeChunk(enemyDeathSound, 64);
 
+    //background
     SDL_Texture* background[4];
     background[0] = graphics.loadTexture("background carrot cute.png");
     background[1] = graphics.loadTexture("startbutton.png");
@@ -111,11 +119,12 @@ int main(int argc, char *argv[]) {
     SDL_Texture* enemyType2Texture = graphics.loadTexture("baby chicken.png");
     SDL_Texture* enemyType3Texture = graphics.loadTexture("baby rabbit.png");
 
+    //tao danh sach ke dich
     std::vector<Enemy> enemies;
     std::cout << "Wave 1 incoming!" << std::endl;
     enemies.push_back(Enemy(12, 190, TYPE1, 0));
     enemies.push_back(Enemy(12, 190, TYPE2, 4000));
-    enemies.push_back(Enemy(12, 190, TYPE3, 12000));
+    enemies.push_back(Enemy(12, 190, TYPE3, 8000));
     std::cout << "Wave 2 will arrive in 10 seconds!" << std::endl;
     enemies.push_back(Enemy(12, 190, TYPE2, 18000));
     enemies.push_back(Enemy(12, 190, TYPE2, 20000));
@@ -139,6 +148,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    //vi tri dc dat thap
     std::vector<SDL_Rect> validTowerPositions = {
         {120, 180, 50, 50},
         {30, 150, 50, 50},
@@ -159,6 +169,7 @@ int main(int argc, char *argv[]) {
     SDL_Texture* fastTowerTexture = graphics.loadTexture("mushroom1.png");
     SDL_Texture* strongTowerTexture = graphics.loadTexture("mushroom2.png");
 
+    // dat thap hien thi chon loai nao, kiem tra tien va tru tien,,,
     auto placeTower = [&](int x, int y, size_t index) {
         std::cout << "Money: " << playerMoney << " - 1:Basic(50), 2:Fast(75), 3:Strong(100)\n";
         bool typeSelected = false;
@@ -207,6 +218,7 @@ int main(int argc, char *argv[]) {
         }
     };
 
+    //vong lap chinh
     while (!quit) {
         Uint32 currentTime = SDL_GetTicks();
         while (SDL_PollEvent(&event)) {
@@ -232,16 +244,22 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        //di chuyen va cham enemy
         for (auto& enemy : enemies) {
             if (currentTime >= enemy.spawnTime) {
                 enemy.move();
                 if (checkCollision(enemy.getCollider(), carrot.pos)) {
-                    std::cout << "Game Over! Carrot was destroyed!" << std::endl;
-                    quit = true;
+                    carrot.takeDamage(10); // Gây sát thương 10 cho cà rốt mỗi lần va chạm
+                    std::cout << "Carrot health: " << carrot.health << std::endl; // In máu để kiểm tra
+                    if (!carrot.isAlive()) { // Chỉ kết thúc khi cà rốt hết máu
+                        std::cout << "Game Over! Carrot was destroyed!" << std::endl;
+                        quit = true;
+                    }
                 }
             }
         }
 
+        // tan cong enemy
         for (auto& tower : towers) {
             for (auto& enemy : enemies) {
                 if (enemy.isAlive() && currentTime >= enemy.spawnTime) {
@@ -259,6 +277,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        //kiem tra thang
         bool allDead = true;
         for (const auto& enemy : enemies) {
             if (enemy.isAlive()) {
@@ -271,6 +290,7 @@ int main(int argc, char *argv[]) {
             quit = true;
         }
 
+        //ve
         graphics.prepareScene(background[3]);
         carrot.render(graphics.renderer);
         for (auto& enemy : enemies) {
@@ -286,7 +306,6 @@ int main(int argc, char *argv[]) {
         for (auto& tower : towers) {
             tower.render(graphics.renderer);
         }
-
 
         char scoreText[50];
         sprintf(scoreText, "Score: %d Money: %d", playerScore, playerMoney);

@@ -5,6 +5,7 @@
 #include "Enemy.h"
 #include <cmath>
 
+//dinh nghia nam
 enum TowerType {
     BASIC,
     FAST,
@@ -14,12 +15,13 @@ enum TowerType {
 struct Tower {
     SDL_Rect pos;
     SDL_Texture* texture;
-    int attackRange;
-    int attackDamage;
-    int attackSpeed;
-    Uint32 lastAttackTime;
+    int attackRange; // vung tan cong
+    int attackDamage; //sat thuong
+    int attackSpeed;  // thoi gian giua 2 lan tan cong (mili giay)
+    Uint32 lastAttackTime; // lan cuoi tan cong
     TowerType type;
 
+    // khoi tao mac dinh cua thap
     Tower() {
         pos.x = 0;
         pos.y = 0;
@@ -33,6 +35,7 @@ struct Tower {
         texture = nullptr;
     }
 
+    // khoi tao co so
     Tower(int x, int y, TowerType t = BASIC) {
         pos.x = x;
         pos.y = y;
@@ -40,31 +43,34 @@ struct Tower {
         pos.h = 60;
         type = t;
 
+        // tung loai thap
         switch (type) {
             case BASIC:
                 attackRange = 150;
-                attackDamage = 10;
+                attackDamage = 15;
                 attackSpeed = 1000;
                 break;
             case FAST:
                 attackRange = 100;
-                attackDamage = 5;
+                attackDamage = 10;
                 attackSpeed = 500;
                 break;
             case STRONG:
-                attackRange = 200;
-                attackDamage = 20;
-                attackSpeed = 1500;
+                attackRange = 250;
+                attackDamage = 30;
+                attackSpeed = 1000;
                 break;
         }
         lastAttackTime = 0;
         texture = nullptr;
     }
 
+    // ve thap
     void render(SDL_Renderer* renderer) {
         SDL_RenderCopy(renderer, texture, NULL, &pos);
     }
 
+    // kiem tra enemy co trong vung tan cong k
     bool checkCollision(Enemy& enemy) {
         int distanceX = enemy.pos.x - pos.x;
         int distanceY = enemy.pos.y - pos.y;
@@ -72,6 +78,7 @@ struct Tower {
         return distance <= attackRange;
     }
 
+    // ham tan cong
     void attack(SDL_Renderer* renderer, Enemy& enemy, Uint32 currentTime) {
         if (currentTime - lastAttackTime >= attackSpeed) {
             if (checkCollision(enemy)) {

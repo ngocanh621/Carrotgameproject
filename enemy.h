@@ -17,8 +17,8 @@ struct Enemy {
     int health;
     int maxHealth;
     EnemyType type;
-    Uint32 spawnTime;
-    MapDirections path;
+    Uint32 spawnTime; // thoi diem xuat hien
+    MapDirections path; // duong di
 
     Enemy(int x, int y, EnemyType t, Uint32 st = 0) {
         pos.x = x;
@@ -34,11 +34,11 @@ struct Enemy {
                 health = maxHealth = 300;
                 break;
             case TYPE2:
-                speed = 1.25;
+                speed = 1.5;
                 health = maxHealth = 400;
                 break;
             case TYPE3:
-                speed = 1.5;
+                speed = 2;
                 health = maxHealth = 500;
                 break;
         }
@@ -50,7 +50,7 @@ struct Enemy {
 
         std::string dir = path.getDir();
         int stop = path.getStop();
-
+        // lay huong hien tai, chinh x y den khi het duong r chuyen huong
         if (dir == "right" && pos.x < stop) {
             pos.x += speed;
             if (pos.x >= stop) path.next();
@@ -66,8 +66,7 @@ struct Enemy {
     void render(SDL_Renderer* renderer) {
         if (texture != nullptr && isAlive()) {
             SDL_RenderCopy(renderer, texture, NULL, &pos);
-
-            // Vẽ thanh máu
+            // tao thanh mau
             int barWidth = 40;
             int barHeight = 5;
             int barX = pos.x + (pos.w - barWidth) / 2;
@@ -81,7 +80,7 @@ struct Enemy {
             SDL_RenderFillRect(renderer, &barOutline);
 
             SDL_Rect healthBar = {barX, barY, filledWidth, barHeight};
-            int red = 255; // Giữ đỏ cố định ở 255
+            int red = 255;
             int green = static_cast<int>(105 + (255 - 105) * (1 - healthRatio));
             int blue = static_cast<int>(180 + (255 - 180) * (1 - healthRatio));
             SDL_SetRenderDrawColor(renderer, red, green, blue, 255);
